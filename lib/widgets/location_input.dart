@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:favorite_places/models/place.dart';
 import 'package:favorite_places/screens/map.dart';
 import 'package:flutter/material.dart';
@@ -16,13 +17,15 @@ class LocationInput extends StatefulWidget {
 }
 
 class _LocationInputState extends State<LocationInput> {
+  String googleMapsApiKey = dotenv.env['GOOGLE_MAPS_API_KEY'] ?? '';
+
   String get locationImage {
     if (_pickedLocation == null) {
       return '';
     }
     final lat = _pickedLocation!.latitude;
     final lng = _pickedLocation!.longitude;
-    return 'https://maps.googleapis.com/maps/api/staticmap?center$lat,$lng=&zoom=16&size=600x300&maptype=roadmap&markers=color:blue%7Clabel:S%7C$lat,$lng&key=AIzaSyDkKSTV8kiFUw_d9pSWou1x88dHeSSOjMk';
+    return 'https://maps.googleapis.com/maps/api/staticmap?center$lat,$lng=&zoom=16&size=600x300&maptype=roadmap&markers=color:blue%7Clabel:S%7C$lat,$lng&key=$googleMapsApiKey';
   }
 
   PlaceLocation? _pickedLocation;
@@ -31,7 +34,7 @@ class _LocationInputState extends State<LocationInput> {
 
   Future<void> _savePlace(double latitude, double longitude) async {
     final url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=AIzaSyDLcwxUggpPZo8lcbH0TB4Crq5SJjtj4ag');
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$googleMapsApiKey');
     final response = await http.get(url);
     final resData = json.decode(response.body);
     final address = resData['results'][0]['formatted_address'];

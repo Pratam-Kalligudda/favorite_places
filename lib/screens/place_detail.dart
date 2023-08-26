@@ -1,15 +1,18 @@
 import 'package:favorite_places/models/place.dart';
 import 'package:favorite_places/screens/map.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class PlaceDetailScreen extends StatelessWidget {
+  String googleMapsApiKey = dotenv.env['GOOGLE_MAPS_API_KEY'] ?? '';
+
   String get locationImage {
     final lat = place.location.latitude;
     final lng = place.location.longitude;
-    return 'https://maps.googleapis.com/maps/api/staticmap?center$lat,$lng=&zoom=16&size=600x300&maptype=roadmap&markers=color:blue%7Clabel:S%7C$lat,$lng&key=AIzaSyDkKSTV8kiFUw_d9pSWou1x88dHeSSOjMk';
+    return 'https://maps.googleapis.com/maps/api/staticmap?center$lat,$lng=&zoom=16&size=600x300&maptype=roadmap&markers=color:blue%7Clabel:S%7C$lat,$lng&key=$googleMapsApiKey';
   }
 
-  const PlaceDetailScreen({super.key, required this.place});
+  PlaceDetailScreen({super.key, required this.place});
   final Place place;
   @override
   Widget build(BuildContext context) {
